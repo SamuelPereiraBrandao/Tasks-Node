@@ -1,0 +1,15 @@
+{
+  "name": "api-campo-limpo",
+  "version": "1.0.0",
+  "description": "Projeto base para estudar API Node.js",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Sem testes ainda\"",
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
