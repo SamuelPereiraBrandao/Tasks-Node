@@ -3,6 +3,8 @@ import { Database } from './database.js';
 import { randomUUID } from 'node:crypto';
 import { buildRoutePath } from './utils/build-route-path.js';
 import { json } from './middlewares/json.js';
+import { parseMultipartFile } from './utils/parse-multipart-file.js';
+import { parseTasksCsv } from './utils/parse-tasks-csv.js';
 
 const database = new Database();
 
@@ -45,6 +47,58 @@ const routes = [
 
             database.insert('tasks', note);
             return res.writeHead(201).end();
+        }
+    },
+    {
+        method: 'POST',
+        path: buildRoutePath('/tasks/lote'),
+        handler: async (req, res) => {
+            const contentType = req.headers['content-type'] ?? '';
+
+            if (!contentType.includes('multipart/form-data')) {
+                return res.writeHead(400).end(JSON.stringify({
+                    message: 'multipart/form-data is required'
+                }));
+            }
+
+            const csvFile = await parseMultipartFile(req, 'csv-archive');
+
+            if (!csvFile || !csvFile.content) {
+                return res.writeHead(400).end(JSON.stringify({
+                    message: 'csv-archive file is required'
+                }));
+            }
+
+            let parsedTasks;
+            try {
+                parsedTasks = parseTasksCsv(csvFile.content);
+            } catch (error) {
+                return res.writeHead(400).end(JSON.stringify({
+                    message: error.message
+                }));
+            }
+
+            if (!parsedTasks.length) {
+                return res.writeHead(400).end(JSON.stringify({
+                    message: 'CSV does not contain valid tasks'
+                }));
+            }
+
+            const now = new Date();
+            const tasks = parsedTasks.map(task => ({
+                id: randomUUID(),
+                title: task.title,
+                description: task.description,
+                completed_at: null,
+                created_at: now,
+                updated_at: now
+            }));
+
+            database.insertMany('tasks', tasks);
+
+            return res.writeHead(201).end(JSON.stringify({
+                created: tasks.length
+            }));
         }
     },
     {

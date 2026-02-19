@@ -1,4 +1,13 @@
 export async function json(req, res) {
+    const contentType = req.headers['content-type'] ?? '';
+
+    res.setHeader('Content-Type', 'application/json')
+
+    if (!contentType.includes('application/json')) {
+        req.body = null;
+        return;
+    }
+
     const buffers = [];
 
     for await (const chunk of req) {
@@ -10,6 +19,4 @@ export async function json(req, res) {
     } catch (error) {
         return req.body = null;
     }
-
-    res.setHeader('Content-Type', 'application/json')
 }

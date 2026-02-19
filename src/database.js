@@ -45,6 +45,17 @@ export class Database {
         return data
     }
 
+    insertMany(table, dataList) {
+        if (!Array.isArray(this.#database[table])) {
+            this.#database[table] = [];
+        }
+
+        this.#database[table].push(...dataList);
+        this.#persist();
+
+        return dataList
+    }
+
     update(table, id, data) {
         const rowIndex = this.#database[table].findIndex(row => row.id === id);
 

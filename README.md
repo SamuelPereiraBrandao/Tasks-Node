@@ -100,6 +100,28 @@ Exemplo:
 curl -X DELETE http://localhost:3333/tasks/SEU_ID
 ```
 
+### `POST /tasks/lote`
+
+Importa tarefas em lote via arquivo CSV (`multipart/form-data`).
+
+Campo esperado no `form-data`:
+- `csv-archive` (arquivo)
+
+Formato do CSV:
+
+```csv
+Task Name,Description
+Task 1,Description 1
+Task 2,Description 2
+```
+
+Exemplo:
+
+```bash
+curl -X POST http://localhost:3333/tasks/lote \
+  -F "csv-archive=@./tasks.csv"
+```
+
 ## Estrutura
 
 ```txt
@@ -119,3 +141,6 @@ db.json
 - `npm start`: inicia normalmente
 - `npm test`: placeholder (sem testes ainda)
 
+## Documentacao Postman
+
+- Link da documentacao: https://documenter.getpostman.com/view/32790910/2sBXcEizME
