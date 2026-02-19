@@ -15,6 +15,11 @@ Projeto de estudo para praticar:
 - Node.js
 - JavaScript (ES Modules)
 
+## Documentacao Postman
+
+- Link da documentacao: https://documenter.getpostman.com/view/32790910/2sBXcEizME
+
+- 
 ## Como rodar
 
 1. Instale o Node.js (versao 18+ recomendada).
